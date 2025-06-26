@@ -18,6 +18,7 @@ class Login {
 
     async register() {
         this.valida();
+
         if(this.errors.length > 0) return;
 
         try {
@@ -38,6 +39,10 @@ class Login {
         // Senha precisa ter entre 3 e 50 caracteres
         if(this.body.senha.length < 3 || this.body.senha.length > 50) {
             this.errors.push('Senha precisa ter entre 3 e 50 caracteres');
+        }
+
+        if(validator.isEmail(this.body.email) && this.body.senha.length >= 3 && this.body.senha.length <= 50) {
+            this.success.push('Você foi cadastrado com sucesso!');
         }
     }
 
