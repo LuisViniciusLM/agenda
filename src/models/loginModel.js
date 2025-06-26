@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcryptjs = require('bcryptjs');
 
 const LoginSchema = new mongoose.Schema( {
     email: { type: String, required: true },
@@ -18,7 +19,12 @@ class Login {
 
     async register() {
         this.valida();
+        const salt = bcryptjs.genSaltSync();
+        this.body.senha = bcryptjs.hashSync(this.body.senha, salt);
 
+        if(this.errors.length > 0) return;
+
+        await this.userExist();
         if(this.errors.length > 0) return;
 
         try {
@@ -27,6 +33,13 @@ class Login {
             console.log(e);
         }
         
+    }
+
+    async userExist() {
+        const user = await LoginModel.findOne({ email: this.body.email });
+        if(user) {
+            this.errors.push('Usuário já existe.');
+        }
     }
 
     valida() {
@@ -42,7 +55,7 @@ class Login {
         }
 
         if(validator.isEmail(this.body.email) && this.body.senha.length >= 3 && this.body.senha.length <= 50) {
-            this.success.push('Você foi cadastrado com sucesso!');
+            this.success.push('Você foi cadastrado com sucesso.');
         }
     }
 
