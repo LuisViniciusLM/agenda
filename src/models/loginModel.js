@@ -72,6 +72,39 @@ class Login {
             senha: this.body.senha
         };
     }
+
+    async login() {
+        const correctConnection = await this.checkingLogin();
+
+        if(correctConnection) return correctConnection;
+    }
+
+    async checkingLogin() {
+        // Buscando usuário pelo e-mail no banco
+        const user = await LoginModel.findOne({ email: this.body.email });
+        let valid = false
+
+        if(!user) {
+            this.errors.push('Usuário não encontrado.');
+        }
+
+        if(this.errors.length > 0) return;
+       
+        if(user) {
+            const passwordIsValid = await bcryptjs.compare(this.body.senha, user.senha);
+            if(!passwordIsValid) {
+                this.errors.push('Senha incorreta.');
+            }
+            
+            if(this.errors.length > 0) return;
+
+            if(passwordIsValid){
+                valid = true;
+            }
+        }
+
+        if(valid) return valid;
+    }
 }
 
 module.exports = Login;

@@ -28,3 +28,20 @@ exports.register = async function (req, res) {
     }
 
 };
+
+exports.connection = async (req, res) => {
+    const connect = new Login(req.body);
+    const searching = await connect.login();
+
+    if(connect.errors.length > 0) {
+        req.flash('errors', connect.errors);
+        req.session.save(function () {
+                return res.redirect('/login/index');
+            });
+            return;
+    }
+
+    if(searching) {
+        return res.redirect('/');
+    }
+}
