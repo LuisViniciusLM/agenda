@@ -27,12 +27,8 @@ class Login {
         await this.userExist();
         if(this.errors.length > 0) return;
 
-        try {
-            this.user = await LoginModel.create(this.body);
-        }catch(e) {
-            console.log(e);
-        }
         
+        this.user = await LoginModel.create(this.body);
     }
 
     async userExist() {
