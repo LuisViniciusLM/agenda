@@ -90,11 +90,14 @@ class Login {
             const passwordIsValid = await bcryptjs.compare(this.body.senha, user.senha);
             if(!passwordIsValid) {
                 this.errors.push('Senha incorreta.');
+                this.user = null;
+                return;
             }
             
             if(this.errors.length > 0) return;
 
             if(passwordIsValid){
+                this.user = user;
                 valid = true;
             }
         }
