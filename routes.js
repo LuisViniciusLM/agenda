@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const homeController = require('./src/controllers/homeController');
 const loginController = require('./src/controllers/loginController');
+const contatoController = require('./src/controllers/contatoController');
 
 
 // rota home
@@ -12,5 +13,10 @@ router.get('/login/index', loginController.index);
 router.post('/login/register', loginController.register);
 router.post('/login/login', loginController.connection);
 router.get('/login/logout', loginController.logout);
+
+// Rotas de contato
+
+router.get('/contato/index', contatoController.index);
+
 
 module.exports = router;
